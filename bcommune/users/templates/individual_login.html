@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {%load static%}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bcommune - Login</title>
+  <link rel="stylesheet" href="{% static 'css/details.css' %}">
+</head>
+<body>
+  <!-- Header/Navbar -->
+  <header>
+    <div class="navbar">
+      <div class="logo">
+        <img src="{% static 'images/Bcommune_logo.png' %}" alt="Bcommune Logo">
+      </div>
+      <nav>
+        <a href="#">About Us</a>
+        <a href="#">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Form Section -->
+  <main>
+    <div class="form-container">
+      <div class="form-box">
+        <h2>Login</h2>
+
+        <!-- Login Form -->
+        <form method="post" action="{% url 'individual_login' %}">
+          {% csrf_token %}
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter Email" required>
+
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter Password" required>
+
+          <button type="submit">Login</button>
+        </form>
+
+        <!-- Sign-Up Link -->
+        <p>Don't have an account? <a href="{% url 'individual_signup' %}">Sign Up</a></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <span>All rights reserved &copy;Bcommune 2024</span>
+    </div>
+  </footer>
+</body>
+</html>

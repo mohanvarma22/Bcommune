@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Dashboard</title>
+</head>
+<body>
+    <h2>Welcome, {{ user.username }}!</h2>
+    <div>
+        <h3>Company Information</h3>
+        <p>Company Name: {{ user.companyprofile.company_name }}</p>
+        <p>Industry: {{ user.companyprofile.industry }}</p>
+        <p>Website: <a href="{{ user.companyprofile.company_website }}" target="_blank">{{ user.companyprofile.company_website }}</a></p>
+    </div>
+    <div>
+        <h3>Actions</h3>
+        <button>Update Profile</button>
+        <button>View Analytics</button>
+        <button><a href="{% url 'logout' %}">Logout</a></button>
+    </div>
+</body>
+</html>

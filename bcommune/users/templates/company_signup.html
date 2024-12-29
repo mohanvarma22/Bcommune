@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Profile Form</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/company_signup.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background-color: #1a2734;
+            padding: 15px 50px;
+            color: white;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar .logo img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .navbar .logo {
+            font-family: 'Varnies', cursive;
+            font-size: 1.8rem;
+            color: white;
+        }  
+        
+        .navbar nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 1rem;
+        }
+        
+        .navbar nav a:hover {
+            text-decoration: underline;
+        }
+        
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            color: #555;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+        .form-submit {
+            text-align: center;
+        }
+        .form-submit button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .form-submit button:hover {
+            background-color: #0056b3;
+        }
+
+        h3 {
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <img src="{% static 'images/Bcommune_logo.png' %}" alt="Bcommune Logo">
+            </div>
+            <nav>
+                <a href="#">About Us</a>
+                <a href="#">Contact Us</a>
+            </nav>
+        </div>
+    </header>
+        
+    <div class="form-container">
+        <h3>Create Business Profile</h3>
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Company Information -->
+            <div class="form-group">
+                <label for="id_company_name">Company Name</label>
+                {{ form.company_name }}
+            </div>
+            <div class="form-group">
+                <label for="id_company_website">Company Website</label>
+                {{ form.company_website }}
+            </div>
+            <div class="form-group">
+                <label for="id_industry">Industry</label>
+                {{ form.industry }}
+            </div>
+            <div class="form-group">
+                <label for="id_company_size">Company Size</label>
+                {{ form.company_size }}
+            </div>
+            <div class="form-group">
+                <label for="id_company_type">Company Type</label>
+                {{ form.company_type }}
+            </div>
+
+            <!-- Personal Information -->
+            <h3>Personal Information</h3>
+            <div class="form-group">
+                <label for="id_person_name">Name</label>
+                {{ form.person_name }}
+            </div>
+            <div class="form-group">
+                <label for="id_designation">Designation</label>
+                {{ form.designation }}
+            </div>
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                <label for="id_company_mail">Company Email ID</label>
+                {{ form.company_mail }}
+            </div>
+            <div class="form-group">
+                <label for="id_phone_number">Phone Number</label>
+                {{ form.phone_number }}
+            </div>
+            <div class="form-group">
+                <label for="id_bcommune_profile">BCommune Profile Link</label>
+                {{ form.bcommune_profile }}
+            </div>
+
+            <!-- Password Fields -->
+            <div class="form-group">
+                <label for="id_password1">Password</label>
+                {{ form.password1 }}
+            </div>
+            <div class="form-group">
+                <label for="id_password2">Confirm Password</label>
+                {{ form.password2 }}
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-submit">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
