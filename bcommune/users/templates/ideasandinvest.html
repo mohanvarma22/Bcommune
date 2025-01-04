@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idea and Investment</title>
+    <link rel="stylesheet" href="/Static/css/individualmyjobs.css"> <!-- CSS file for styling -->
+    <link rel="stylesheet" href="/Static/css/homepage.css">
+</head>
+<body>
+
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <img src="/images/Bcommune_logo.png" alt="Bcommune Logo">
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="   Search for jobs, skills, etc." />
+            </div>
+            <nav>
+                <a href="#">My Jobs</a>
+                <a href="#">Notifications</a>
+                <a href="#">My Profile</a>
+            </nav>
+        </div>
+    </header>
+    
+    
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <img src="/images/em..jpg" alt="User Photo" class="profile-pic">
+            <h2>Preetham Sagar</h2>
+            <p>Graduate from VMEG</p>
+            <br><br>
+
+            <h4>Trending Skills</h4>
+            <ul>
+                <li>#Data Structures</li>
+                <li>#Data Analysis</li>
+                <li>#Java Programming</li>
+            </ul>
+            <br>
+
+            <h4>
+                <a href="profileanalysis.html" style="text-decoration: none; color: inherit;">Profile Analysis</a>
+            </h4>
+            <br>
+
+            <h4>
+                <a href="core.html" style="text-decoration: none; color: inherit;">CORE</a>
+            </h4>
+            
+            <h4>
+                <a href="{% url 'ideasandinvest' %}" style="text-decoration: none; color: inherit;">Ideas & Invest</a>
+            </h4>
+            
+            <h4>
+                <a href="assessments.html" style="text-decoration: none; color: inherit;">Assessments</a>
+            </h4>
+            <h4>
+                <a href="faq.html" style="text-decoration: none; color: inherit;">FAQ'S</a>
+            </h4>              
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+                <div class="header-row">
+                    <h2>Idea & Investment</h2>
+                    <div class="post-requirement">
+                        <a href="{% url 'ideaform' %}" class="post-button">+ Post an Idea</a>
+                    </div>
+                </div>
+                <p>Innovate, Invest & Be the part of Future</p>
+        </div>
+    </div>
+
+    <script src="individualmyjobs.js"></script> <!-- JavaScript file for dynamic elements -->
+
+</body>
+</html>

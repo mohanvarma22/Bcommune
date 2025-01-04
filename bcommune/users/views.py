@@ -3,9 +3,10 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-
+from .models import Idea 
 from users.forms import CompanySignupForm
 from django.contrib.auth import logout
+from django.http import JsonResponse
 
 def logout_view(request):
     logout(request)
@@ -53,7 +54,8 @@ def individual_signup(request):
 
 @login_required
 def individual_dashboard(request):
-    return render(request, 'individual_dashboard.html')
+    ideas = Idea.objects.all()  # Get all ideas submitted
+    return render(request, 'individual_dashboard.html', {'ideas': ideas})
 
 def company_login(request):
     if request.method == "POST":
@@ -88,4 +90,50 @@ def company_signup(request):
 def company_dashboard(request):
     # Here, you can fetch the company's data from the database
     # Example: company = request.user.companyprofile
-    return render(request, 'company_dashboard.html')
+    ideas = Idea.objects.all()  
+    return render(request, 'company_dashboard.html',{'ideas':ideas})
+
+def ideaform(request):
+    return render(request, 'ideaform.html')
+
+def submit_idea(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        patent_number = request.POST.get('patent_number')
+        brief_description = request.POST.get('brief_description')
+        application_number = request.POST.get('application_number')
+        problem_statement = request.POST.get('problem_statement')
+        solution = request.POST.get('solution')
+        visibility = request.POST.get('visibility')
+        details = request.POST.get('details')
+        fund = request.POST.get('fund')
+        category = request.POST.get('category')
+        photo = request.FILES.get('photo')
+        video = request.FILES.get('video')
+        team_info = request.POST.get('team_info')
+
+        # Save to database
+        idea = Idea(
+            title=title,
+            patent_number=patent_number,
+            brief_description=brief_description,
+            application_number=application_number,
+            problem_statement=problem_statement,
+            solution=solution,
+            visibility=visibility,
+            details=details,
+            fund=fund,
+            category=category,
+            photo=photo,
+            video=video,
+            team_info=team_info
+        )
+        idea.save()
+
+        return JsonResponse({'message': 'Idea submitted successfully!'})
+
+    return JsonResponse({'error': 'Invalid request method!'}, status=400)
+
+
+def ideas_and_invest(request):
+    return render(request, 'ideasandinvest.html')
