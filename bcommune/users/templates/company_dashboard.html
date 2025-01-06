@@ -1,11 +1,13 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company Home Page</title>
-    <link rel="stylesheet" href="/Static/css/individualmyjobs.css"> <!-- CSS file for styling -->
-    <link rel="stylesheet" href="/Static/css/homepage.css">
+    <link rel="stylesheet" href="{% static 'css/homepage.css'%}">
+    <link rel="stylesheet" href="{% static 'css/individualmyjobs.css'%}">
 </head>
 <body>
 
@@ -18,7 +20,7 @@
                 <input type="text" placeholder="   Search for jobs, skills, etc." />
             </div>
             <nav>
-                <a href="#">My Jobs</a>
+                <a href="{% url 'myjobs' %}">My Jobs</a>
                 <a href="#">Notifications</a>
                 <a href="#">My Profile</a>
             </nav>

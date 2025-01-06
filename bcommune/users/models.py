@@ -1,5 +1,8 @@
 
 from django.db import models
+from django.utils import timezone
+
+
 
 class Idea(models.Model):
     title = models.CharField(max_length=200)
@@ -19,3 +22,18 @@ class Idea(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Job(models.Model):
+    title = models.CharField(max_length=200)
+    company = models.CharField(max_length=200)
+    location = models.CharField(max_length=200)
+    description = models.TextField()
+    requirements = models.CharField(max_length=200)  # or TextField()
+    salary = models.CharField(max_length=200, default="Not Specified") 
+    posted_date = models.DateTimeField(default=timezone.now)
+    # Add other fields as needed
+
+    def __str__(self):
+        return f"{self.title} at {self.company}"
+
+

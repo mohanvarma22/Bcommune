@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from .models import Idea 
+from .models import Idea, Job
 from users.forms import CompanySignupForm
 from django.contrib.auth import logout
 from django.http import JsonResponse
@@ -55,7 +55,8 @@ def individual_signup(request):
 @login_required
 def individual_dashboard(request):
     ideas = Idea.objects.all()  # Get all ideas submitted
-    return render(request, 'individual_dashboard.html', {'ideas': ideas})
+    jobs = Job.objects.all().order_by('-posted_date')
+    return render(request, 'individual_dashboard.html', {'ideas': ideas, 'jobs':jobs})
 
 def company_login(request):
     if request.method == "POST":
@@ -137,3 +138,26 @@ def submit_idea(request):
 
 def ideas_and_invest(request):
     return render(request, 'ideasandinvest.html')
+
+
+def myjobs(request):
+    # Add any logic to fetch jobs from database if needed
+    return render(request, 'myjobs.html')
+
+def post_job(request):
+    if request.method == 'POST':
+        try:
+            # Create new job from form data
+            job = Job.objects.create(
+                title=request.POST.get('job_title'),
+                company=request.POST.get('company_name'),
+                location=request.POST.get('job_location'),
+                description=request.POST.get('job_description'),
+                requirements=request.POST.get('job_type'),  # Added job type
+                salary=request.POST.get('salary'),
+            )
+            return JsonResponse({'status': 'success', 'message': 'Job posted successfully!'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    
+    return render(request, 'create_job.html')

@@ -15,6 +15,9 @@ urlpatterns = [
     path('ideaform/', views.ideaform, name='ideaform'),
     path('submit_idea/', views.submit_idea, name='submit_idea'),
     path('individual/dashboard/ideasandinvest/', views.ideas_and_invest, name='ideasandinvest'),
+    path('company/dashboard/myjobs/', views.myjobs, name='myjobs'),
+    path('company/dashboard/myjobs/post/', views.post_job, name='post_job'),
+    path('company/dashboard/myjobs/post/create-job/', views.post_job, name='create_job'),
 ]
 
 if settings.DEBUG:
