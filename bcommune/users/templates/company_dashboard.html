@@ -31,31 +31,53 @@
     <div class="main-container">
         <!-- Left Sidebar -->
         <div class="sidebar">
-            <img src="/images/google.png" alt="User Photo" class="profile-pic">
-            <h2>GOOGLE</h2>
-            <br><br>
-
-            <h4>Trending Skills</h4>
-            <ul>
-                <li>#Data Structures</li>
-                <li>#Data Analysis</li>
-                <li>#Java Programming</li>
-            </ul>
-            <br>
-
-            <h4>Profile Analytics</h4>
-            <br>
-
-            <h4>CORE</h4>
-            <br><br>
-
-            <h4>Options</h4>
-            <ul>
-                <li>Ideas & Invest</li>
-                <li>Assessments</li>
-                <li>FAQs</li>
-            </ul>
-        </div>
+          <img src="/images/googleorg.webp" alt="User Photo" class="profile-pic">
+          <h2>GOOGLE</h2>
+          <br><br>
+      
+          <h4>
+            <a href="#" style="text-decoration: none; color: inherit;">Dashboard</a>
+          </h4>
+          <ul>
+              <li>
+                <a href="#" style="text-decoration: none; color: inherit;">Overview</a>
+              </li>
+              <li>
+                <a href="#" style="text-decoration: none; color: inherit;">Outsourcing & Vendor Analytics</a>
+              </li>
+              <li>
+                <a href="#" style="text-decoration: none; color: inherit;">Freelancer Analytics</a>
+              </li>
+              <li>
+                <a href="#" style="text-decoration: none; color: inherit;">Startup & Investment Insights</a>
+              </li>
+          </ul>
+          <br>
+      
+          <h4>
+            <a href="#" style="text-decoration: none; color: inherit;">Resume Database</a>
+          </h4>
+          <br>
+      
+          <h4>
+            <a href="#" style="text-decoration: none; color: inherit;">Assessments</a>
+          </h4>
+          <br>
+      
+          <h4>
+            
+            <a href="{% url 'myprojects' %}" style="text-decoration: none; color: inherit;">My Projects</a>
+            
+          </h4>
+          
+          <h4>
+            <a href="#" style="text-decoration: none; color: inherit;">My Internship</a>
+          </h4>
+      
+          <h4>
+            <a href="faq1.html" style="text-decoration: none; color: inherit;">FAQ's</a>
+          </h4>
+      </div>
 
         <!-- Main Content -->
         <div class="content">
@@ -165,5 +187,29 @@
               </div>
             </section>
         </div>
+
+        <script>
+          function includeHTML() {
+              const elements = document.querySelectorAll("[include-html]");
+              elements.forEach((element) => {
+                  const file = element.getAttribute("include-html");
+                  if (file) {
+                      fetch(file)
+                          .then((response) => {
+                              if (response.ok) return response.text();
+                              throw new Error("Page not found");
+                          })
+                          .then((data) => {
+                              element.innerHTML = data;
+                              element.removeAttribute("include-html");
+                              includeHTML(); // Recursive call to load nested includes if any
+                          })
+                          .catch((error) => console.error(error));
+                  }
+              });
+          }
+          document.addEventListener("DOMContentLoaded", includeHTML);
+      </script>
+
 </body>
 </html>

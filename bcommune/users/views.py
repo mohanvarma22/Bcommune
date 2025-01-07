@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from .models import Idea, Job
+from .models import Idea, Job, Project
 from users.forms import CompanySignupForm
 from django.contrib.auth import logout
 from django.http import JsonResponse
@@ -161,3 +161,53 @@ def post_job(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     
     return render(request, 'create_job.html')
+
+@login_required
+def myprojects(request):
+    # Check if the user is a company user
+    other_company_projects = Project.objects.exclude(company=request.user).order_by('-created_at')
+    
+    # Get projects posted by the current company (for portfolio section)
+    my_projects = Project.objects.filter(company=request.user).order_by('-created_at')
+    
+    context = {
+        'projects': other_company_projects,
+        'my_projects': my_projects
+    }
+    return render(request, 'myprojects.html', context)
+@login_required
+def post_project(request):
+    if request.method == 'POST':
+        # Create new project from form data
+        project = Project(
+            company=request.user,
+            title=request.POST['title'],
+            description=request.POST['description'],
+            project_type=request.POST['type'],
+            industry=request.POST['industry'],
+            budget=request.POST['budget'],
+            timeline=request.POST['timeline'],
+            location=request.POST['location'],
+            expertise_required=request.POST['expertise'],
+            payment_terms=request.POST['payment-terms'],
+        )
+        project.save()
+        messages.success(request, 'Project posted successfully!')
+        return redirect('myprojects')
+    
+    return render(request, 'myprojectform.html')
+    
+    
+def myprojectform(request):
+    return render(request, 'myprojectform.html') 
+
+@login_required
+def delete_project(request, project_id):
+    try:
+        project = Project.objects.get(id=project_id, company=request.user)
+        project.delete()
+        messages.success(request, 'Project deleted successfully!')
+    except Project.DoesNotExist:
+        messages.error(request, 'Project not found or you do not have permission to delete it.')
+    return redirect('myprojects')
+

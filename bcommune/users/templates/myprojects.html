@@ -1,0 +1,118 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Projects</title>
+    <link rel="stylesheet" href="{% static 'css/individualmyjobs.css' %}">
+    <link rel="stylesheet" href="{% static 'css/homepage.css' %}">
+</head>
+<body>
+    <div include-html="header2.html"></div>
+    
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <div include-html="sidebarcompany.html"></div>
+
+        <!-- Main Content -->
+        <div class="content">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <section class="bid-project">
+                <div class="post-requirement">
+                    <a href="{% url 'myprojectform' %}" class="post-button">+ Post a Project</a>
+                </div>
+                <h2>
+                    <a href="{% url 'myprojects' %}" class="headings">Bid for a Project</a>
+                </h2>
+                <div class="bid-cards">
+                    {% if projects %}
+                        {% for project in projects %}
+                            <div class="bid-card">
+                                <div class="bid-logo">
+                                    <!-- You can add company logo here if available -->
+                                    <img src="{% static 'images/default-project.png' %}" alt="Project Logo">
+                                </div>
+                                <h3>{{ project.title }}</h3>
+                                <p>{{ project.description|truncatechars:100 }}<br>{{ project.location }}</p>
+                                <p>Budget: ${{ project.budget }}</p>
+                                <p>Posted: {{ project.created_at|timesince }} ago</p>
+                                <div class="bid-buttons">
+                                    <button class="bid-button" onclick="location.href='#'"> BID </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No projects available from other companies at the moment.</p>
+                    {% endif %}
+                </div>
+            </section>
+
+            <section class="portfolio">
+                <h2>
+                    <a href="portfolio.html" class="headings">My Portfolio</a>
+                </h2>
+                <div class="bid-cards">
+                    {% if my_projects %}
+                        {% for project in my_projects %}
+                            <div class="bid-card">
+                                <div class="bid-logo">
+                                    <img src="{% static 'images/default-project.png' %}" alt="Project Logo">
+                                </div>
+                                <h3>{{ project.title }}</h3>
+                                <p>{{ project.description|truncatechars:100 }}<br>{{ project.location }}</p>
+                                <p>Budget: ${{ project.budget }}</p>
+                                <p>Posted: {{ project.created_at|timesince }} ago</p>
+                                <div class="bid-buttons">
+                                    <button class="edit-button" onclick="location.href='#'">Edit</button>
+                                    <button class="delete-button" onclick="confirmDelete('{{ project.id }}')">Delete</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>You haven't posted any projects yet.</p>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+
+        <script>
+            function includeHTML() {
+                const elements = document.querySelectorAll("[include-html]");
+                elements.forEach((element) => {
+                    const file = element.getAttribute("include-html");
+                    if (file) {
+                        fetch(file)
+                            .then((response) => {
+                                if (response.ok) return response.text();
+                                throw new Error("Page not found");
+                            })
+                            .then((data) => {
+                                element.innerHTML = data;
+                                element.removeAttribute("include-html");
+                                includeHTML();
+                            })
+                            .catch((error) => console.error(error));
+                    }
+                });
+            }
+
+            function confirmDelete(projectId) {
+                if (confirm('Are you sure you want to delete this project?')) {
+                    window.location.href = `/delete-project/${projectId}/`;
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", includeHTML);
+        </script>
+    </div>
+</body>
+</html>

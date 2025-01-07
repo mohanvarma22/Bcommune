@@ -17,7 +17,11 @@ urlpatterns = [
     path('individual/dashboard/ideasandinvest/', views.ideas_and_invest, name='ideasandinvest'),
     path('company/dashboard/myjobs/', views.myjobs, name='myjobs'),
     path('company/dashboard/myjobs/post/', views.post_job, name='post_job'),
+    path('company/dashboard/myprojects/', views.myprojects, name='myprojects'),
+    path('company/dashboard/myprojects/post_project/', views.myprojectform, name='myprojectform'),
     path('company/dashboard/myjobs/post/create-job/', views.post_job, name='create_job'),
+    path('company/dashboard/myprojects/post_project/submit/', views.post_project, name='post_project'),
+    path('delete-project/<int:project_id>/', views.delete_project, name='delete_project'),
 ]
 
 if settings.DEBUG:

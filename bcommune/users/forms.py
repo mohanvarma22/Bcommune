@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
+
 class CompanySignupForm(UserCreationForm):
     INDUSTRY_CHOICES = [
         ('Agriculture', 'Agriculture'),
@@ -48,7 +49,7 @@ class CompanySignupForm(UserCreationForm):
     company_mail = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
     phone_number = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'class': 'form-control', 'pattern': '[0-9]{10}'}))
     bcommune_profile = forms.URLField(widget=forms.URLInput(attrs={'class': 'form-control'}))
-
+    is_company = forms.BooleanField(initial=True, widget=forms.HiddenInput())
     class Meta:
         model = User
         fields = ['username', 'password1', 'password2', 'company_name', 'company_website', 'industry', 
@@ -58,6 +59,8 @@ class CompanySignupForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.username = self.cleaned_data['company_mail']  # Set username as company_mail
+        user.is_company = self.cleaned_data['is_company']
         if commit:
             user.save()
         return user
+    
