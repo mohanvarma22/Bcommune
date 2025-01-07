@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-
+from .models import CustomUser
 
 class CompanySignupForm(UserCreationForm):
     INDUSTRY_CHOICES = [
@@ -51,16 +51,41 @@ class CompanySignupForm(UserCreationForm):
     bcommune_profile = forms.URLField(widget=forms.URLInput(attrs={'class': 'form-control'}))
     is_company = forms.BooleanField(initial=True, widget=forms.HiddenInput())
     class Meta:
-        model = User
+        model = CustomUser
         fields = ['username', 'password1', 'password2', 'company_name', 'company_website', 'industry', 
                  'company_size', 'company_type', 'person_name', 'designation', 'company_mail', 
                  'phone_number', 'bcommune_profile']
+    def clean(self):
+        cleaned_data = super().clean()
+        company_mail = cleaned_data.get('company_mail')
         
+        if company_mail:
+            if CustomUser.objects.filter(email=company_mail).exists():
+                raise forms.ValidationError("This email is already registered.")
+            cleaned_data['username'] = company_mail
+            
+        return cleaned_data    
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.username = self.cleaned_data['company_mail']  # Set username as company_mail
-        user.is_company = self.cleaned_data['is_company']
+        user.username = self.cleaned_data['company_mail']
+        user.email = self.cleaned_data['company_mail']
+        user.is_company = True
+        user.user_type = 'company'
+        user.company_name = self.cleaned_data['company_name']
+        user.company_website = self.cleaned_data['company_website']
+        user.industry = self.cleaned_data['industry']
+        user.company_size = self.cleaned_data['company_size']
+        user.company_type = self.cleaned_data['company_type']
+        user.designation = self.cleaned_data['designation']
+        user.phone_number = self.cleaned_data['phone_number']
+        user.bcommune_profile = self.cleaned_data['bcommune_profile']
+        
         if commit:
             user.save()
         return user
     
+class IndividualSignupForm(forms.Form):
+    name = forms.CharField(max_length=255)
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)

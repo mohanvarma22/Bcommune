@@ -1,8 +1,22 @@
-
+from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-
+from django.conf import settings 
+class CustomUser(AbstractUser):
+    USER_TYPE_CHOICES = (
+        ('individual', 'Individual'),
+        ('company', 'Company'),
+    )
+    user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='company') 
+    company_name = models.CharField(max_length=255, null=True, blank=True)
+    company_website = models.URLField(max_length=200, null=True, blank=True)
+    industry = models.CharField(max_length=100, null=True, blank=True)
+    company_size = models.CharField(max_length=20, null=True, blank=True)
+    company_type = models.CharField(max_length=255, null=True, blank=True)
+    designation = models.CharField(max_length=255, null=True, blank=True)
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
+    bcommune_profile = models.URLField(null=True, blank=True)
 
 
     
@@ -39,7 +53,7 @@ class Job(models.Model):
         return f"{self.title} at {self.company}"
     
 class Project(models.Model):
-    company = models.ForeignKey(User, on_delete=models.CASCADE)
+    company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField()
     project_type = models.CharField(max_length=100)

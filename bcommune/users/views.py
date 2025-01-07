@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.decorators import login_required
-from .models import Idea, Job, Project
-from users.forms import CompanySignupForm
+from .models import Idea, Job, Project, CustomUser
+from users.forms import CompanySignupForm, IndividualSignupForm
 from django.contrib.auth import logout
 from django.http import JsonResponse
 
@@ -15,82 +15,99 @@ def logout_view(request):
 def home(request):
     return render(request, 'home.html')
 
+def individual_signup(request):
+    if request.method == 'POST':
+        form = IndividualSignupForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['password'] != form.cleaned_data['confirm_password']:
+                messages.error(request, "Passwords do not match.")
+                return redirect('individual_signup')
+
+            if CustomUser.objects.filter(email=form.cleaned_data['email']).exists():
+                messages.error(request, "Email already exists.")
+                return redirect('individual_signup')
+
+            try:
+                user = CustomUser.objects.create_user(
+                    username=form.cleaned_data['email'],
+                    email=form.cleaned_data['email'],
+                    password=form.cleaned_data['password'],
+                    first_name=form.cleaned_data['name'],
+                    user_type='individual'
+                )
+                messages.success(request, "Account created successfully!")
+                return redirect('individual_login')
+            except Exception as e:
+                messages.error(request, f"Error creating account: {str(e)}")
+                return redirect('individual_signup')
+    else:
+        form = IndividualSignupForm()
+    return render(request, 'individual_signup.html', {'form': form})
+
 def individual_login(request):
     if request.method == 'POST':
-        username = request.POST['email']
+        email = request.POST['email']
         password = request.POST['password']
-
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
+        
+        user = authenticate(request, username=email, password=password)
+        
+        if user is not None and user.user_type == 'individual':
             login(request, user)
             return redirect('individual_dashboard')
         else:
-            messages.error(request, "Invalid email or password.")
+            messages.error(request, "Invalid credentials or wrong user type.")
             return redirect('individual_login')
-
+    
     return render(request, 'individual_login.html')
-
-def individual_signup(request):
-    if request.method == 'POST':
-        username = request.POST['email']
-        password = request.POST['password']
-        confirm_password = request.POST['confirm_password']
-
-        if password != confirm_password:
-            messages.error(request, "Passwords do not match.")
-            return redirect('individual_signup')
-
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Email already exists.")
-            return redirect('individual_signup')
-
-        # Create a new user
-        User.objects.create_user(username=username, password=password)
-        messages.success(request, "Account created successfully!")
-        return redirect('individual_login')
-
-    return render(request, 'individual_signup.html')
 
 @login_required
 def individual_dashboard(request):
+    if request.user.user_type != 'individual':
+        return redirect('individual_login')
     ideas = Idea.objects.all()  # Get all ideas submitted
     jobs = Job.objects.all().order_by('-posted_date')
     return render(request, 'individual_dashboard.html', {'ideas': ideas, 'jobs':jobs})
 
+def company_signup(request):
+    if request.method == 'POST':
+        form = CompanySignupForm(request.POST)
+        if form.is_valid():
+            try:
+                user = form.save()
+                messages.success(request, "Company account created successfully!")
+                return redirect('company_login')
+            except Exception as e:
+                messages.error(request, f"Error creating account: {str(e)}")
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+    else:
+        form = CompanySignupForm()
+    return render(request, 'company_signup.html', {'form': form})
+
 def company_login(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
         
-        # Authenticate the user
         user = authenticate(request, username=email, password=password)
         
-        if user is not None:
-            login(request, user)  # Login the user
-            return redirect('company_dashboard')  # Redirect to dashboard on success
+        if user is not None and user.user_type == 'company':
+            login(request, user)
+            return redirect('company_dashboard')
         else:
-            return render(request, 'company_login.html', {'error': 'Invalid login credentials'})
-    
+            messages.error(request, "Invalid credentials or wrong user type.")
     return render(request, 'company_login.html')
 
-# View for Company Signup
-def company_signup(request):
-    if request.method == "POST":
-        form = CompanySignupForm(request.POST)
-        if form.is_valid():
-            form.save()  # Save the new company user
-            return redirect('company_login')  # Redirect to login after signup
-    else:
-        form = CompanySignupForm()
-
-    return render(request, 'company_signup.html', {'form': form})
 
 # View for Company Dashboard (requires login)
 @login_required
 def company_dashboard(request):
     # Here, you can fetch the company's data from the database
     # Example: company = request.user.companyprofile
+    if request.user.user_type != 'company':
+        return redirect('company_login')
     ideas = Idea.objects.all()  
     return render(request, 'company_dashboard.html',{'ideas':ideas})
 
