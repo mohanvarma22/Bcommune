@@ -22,6 +22,8 @@ urlpatterns = [
     path('company/dashboard/myjobs/post/create-job/', views.post_job, name='create_job'),
     path('company/dashboard/myprojects/post_project/submit/', views.post_project, name='post_project'),
     path('delete-project/<int:project_id>/', views.delete_project, name='delete_project'),
+    path('company/dashboard/myprojects/edit/<int:project_id>/', views.edit_project, name='edit_project'),
+
 ]
 
 if settings.DEBUG:

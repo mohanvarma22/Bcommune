@@ -11,62 +11,13 @@
 </head>
 <body>
 
-    <header>
-        <div class="navbar">
-            <div class="logo">
-                <img src="/images/Bcommune_logo.png" alt="Bcommune Logo">
-            </div>
-            <div class="search-bar">
-                <input type="text" placeholder="   Search for jobs, skills, etc." />
-            </div>
-            <nav>
-                <a href="#">My Jobs</a>
-                <a href="#">Notifications</a>
-                <a href="#">My Profile</a>
-            </nav>
-        </div>
-    </header>
+    {% include 'header1.html' %}
     
     
     <!-- Main Container -->
     <div class="main-container">
         <!-- Left Sidebar -->
-        <div class="sidebar">
-            <img src="/images/em..jpg" alt="User Photo" class="profile-pic">
-            <h2>Preetham Sagar</h2>
-            <p>Graduate from VMEG</p>
-            <br><br>
-
-            <h4>Trending Skills</h4>
-            <ul>
-                <li>#Data Structures</li>
-                <li>#Data Analysis</li>
-                <li>#Java Programming</li>
-            </ul>
-            <br>
-
-            <h4>Profile Analytics</h4>
-            <br>
-
-            <h4>CORE</h4>
-            <br><br>
-
-            <h4>
-                <a href="{% url 'ideasandinvest' %}" style="text-decoration: none; color: inherit;">
-                  Ideas & Invest
-                </a>
-            </h4>
-            <h4>
-                <a href="assessments.html" style="text-decoration: none; color: inherit;">
-                  Assessments
-                </a>
-            </h4>
-            <h4>
-                <a href="faq.html" style="text-decoration: none; color: inherit;">
-                  FAQ'S
-                </a>
-            </h4>              
-        </div>
+        {% include 'sidebar.html' %}
 
         <!-- Main Content -->
         <div class="content">
@@ -84,7 +35,7 @@
                             <p><strong>Solution:</strong> {{ idea.solution }}</p>
                             <p><strong>Required Fund:</strong> ₹{{ idea.fund_required }}</p>
                             <p><strong>Category:</strong> {{ idea.category }}</p>
-                            {% if idea.photo %}
+                            <!-- {% if idea.photo %}
                                 <img src="{{ idea.photo.url }}" alt="Idea Photo">
                             {% endif %}
                             {% if idea.video %}
@@ -92,7 +43,7 @@
                                     <source src="{{ idea.video.url }}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
-                            {% endif %}
+                            {% endif %} -->
                             <hr>
                         </div>
                     {% empty %}

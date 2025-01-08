@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, get_user_model
@@ -104,13 +104,20 @@ def company_login(request):
 # View for Company Dashboard (requires login)
 @login_required
 def company_dashboard(request):
-    # Here, you can fetch the company's data from the database
-    # Example: company = request.user.companyprofile
     if request.user.user_type != 'company':
         return redirect('company_login')
-    ideas = Idea.objects.all()  
-    return render(request, 'company_dashboard.html',{'ideas':ideas})
-
+    
+    ideas = Idea.objects.all().order_by('-created_at')[:3]
+    recent_projects = Project.objects.exclude(company=request.user).order_by('-created_at')[:3]
+    my_projects = Project.objects.filter(company=request.user).order_by('-created_at')[:3]
+    
+    context = {
+        'ideas': ideas,
+        'recent_projects': recent_projects,
+        'my_projects': my_projects,
+        'company_name': request.user.company_name,
+    }
+    return render(request, 'company_dashboard.html', context)
 def ideaform(request):
     return render(request, 'ideaform.html')
 
@@ -228,3 +235,35 @@ def delete_project(request, project_id):
         messages.error(request, 'Project not found or you do not have permission to delete it.')
     return redirect('myprojects')
 
+@login_required
+def edit_project(request, project_id):
+    try:
+        project = get_object_or_404(Project, id=project_id, company=request.user)
+        
+        if request.method == 'POST':
+            project.title = request.POST['title']
+            project.description = request.POST['description']
+            project.project_type = request.POST['type']
+            project.industry = request.POST['industry']
+            project.budget = request.POST['budget']
+            project.timeline = request.POST['timeline']  # This will now be in YYYY-MM-DD format
+            project.location = request.POST['location']
+            project.expertise_required = request.POST['expertise']
+            project.payment_terms = request.POST['payment-terms']
+            
+            # Handle boolean fields
+            project.nda_required = 'nda_required' in request.POST
+            project.confidentiality_required = 'confidentiality_required' in request.POST
+            project.ip_rights_required = 'ip_rights_required' in request.POST
+            
+            # Handle optional field
+            project.custom_field = request.POST.get('custom_field', '')
+            
+            project.save()
+            messages.success(request, 'Project updated successfully!')
+            return redirect('myprojects')
+            
+        return render(request, 'edit_project.html', {'project': project})
+    except Exception as e:
+        messages.error(request, f'Error editing project: {str(e)}')
+        return redirect('myprojects')

@@ -1,5 +1,5 @@
-{% load static %}
 
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,21 +11,7 @@
 </head>
 <body>
 
-    <header>
-        <div class="navbar">
-            <div class="logo">
-                <img src="/images/Bcommune_logo.png" alt="Bcommune Logo">
-            </div>
-            <div class="search-bar">
-                <input type="text" placeholder="   Search for jobs, skills, etc." />
-            </div>
-            <nav>
-                <a href="{% url 'myjobs' %}">My Jobs</a>
-                <a href="#">Notifications</a>
-                <a href="#">My Profile</a>
-            </nav>
-        </div>
-    </header>
+  {% include 'header2.html' %}
     
     <!-- Main Container -->
     <div class="main-container">
@@ -86,30 +72,6 @@
             <h2>Find new Talents</h2>
             <p>Hire the best with Bcommune, pick top individuals,...</p>
 
-            <section class="job-explore">
-              <h2>Explore Jobs</h2>
-              <div class="job-cards">
-                <div class="job-card">
-                  <div class="company-logo">Company Logo</div>
-                  <h3>Data Analyst</h3>
-                  <p>CyberSense<br>Hyderabad</p>
-                  <p>1 week ago</p>
-                </div>
-                <div class="job-card">
-                  <div class="company-logo">Company Logo</div>
-                  <h3>Data Analyst</h3>
-                  <p>Google<br>Hyderabad</p>
-                  <p>1 week ago</p>
-                </div>
-                <div class="job-card">
-                  <div class="company-logo">Company Logo</div>
-                  <h3>AI Engineer</h3>
-                  <p>Google<br>Pune</p>
-                  <p>2 weeks ago</p>
-                </div>
-              </div>
-            </section>
-
             <section class="idea-explore">
               <h2>Explore Ideas</h2>
               <div class="idea-list">
@@ -127,28 +89,29 @@
             </section>
 
             <section class="bid-project">
-              <h2>Bid for a Project</h2>
+              <h2>
+                  <a href="{% url 'myprojects' %}" class="headings">Bid for a Project</a>
+              </h2>
               <div class="bid-cards">
-                <div class="bid-card">
-                  <div class="bid-logo">Idea Logo</div>
-                  <h3>Project Name</h3>
-                  <p>Short description<br>Hyderabad</p>
-                  <p>1 week ago</p>
-                </div>
-                <div class="bid-card">
-                  <div class="bid-logo">Idea Logo</div>
-                  <h3>Project Name</h3>
-                  <p>Short description<br>Delhi</p>
-                  <p>1 week ago</p>
-                </div>
-                <div class="bid-card">
-                  <div class="bid-logo">Idea Logo</div>
-                  <h3>Project Name</h3>
-                  <p>Short description<br>Pune</p>
-                  <p>1 week ago</p>
-                </div>
+                  {% for project in recent_projects %}
+                      <div class="bid-card">
+                          <div class="bid-logo">
+                              {% if project.company.logo %}
+                                  <img src="{{ project.company.logo.url }}" alt="Company Logo">
+                              {% else %}
+                                  {{ project.company.company_name|make_list|first }}
+                              {% endif %}
+                          </div>
+                          <h3>{{ project.title }}</h3>
+                          <p>{{ project.description|truncatechars:50 }}<br>{{ project.location }}</p>
+                          <p>{{ project.created_at|timesince }} ago</p>
+                          <p>Budget: ${{ project.budget }}</p>
+                      </div>
+                  {% empty %}
+                      <p>No projects available</p>
+                  {% endfor %}
               </div>
-            </section>
+          </section>
 
             <section class="top-picks">
               <h2>Bcommune top picks for you...</h2>

@@ -121,6 +121,7 @@ header {
 }
 
 /* Content Section */
+/* General Content Styling */
 .content {
     flex: 1;
     padding: 20px;
@@ -134,27 +135,98 @@ header {
     margin-bottom: 20px;
 }
 
-.job-explore, .idea-explore, .bid-project {
+/* Card Containers */
+.job-explore, .bid-project {
     margin-bottom: 30px;
 }
 
 .job-cards, .idea-cards, .bid-cards, .top-cards {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 15px; /* Spacing between cards */
     margin-top: 10px;
     justify-content: center;
 }
 
+/* Individual Card Styling */
 .job-card, .idea-card, .bid-card, .top-card {
     background-color: #fff;
-    padding: 15px;
+    padding: 15px; /* Padding inside cards */
     border: 1px solid #ddd;
-    border-radius: 10px;
+    border-radius: 8px; /* Smooth edges */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: calc(100% / 3 - 20px);
+    width: calc(100% / 4 - 20px); /* 4 cards per row */
     text-align: center;
+    display: flex;
+    flex-direction: column; /* Arrange content vertically */
+    align-items: center; /* Center content horizontally */
+    transition: transform 0.2s, box-shadow 0.2s; /* Hover effects */
 }
+
+.job-card:hover, .idea-card:hover, .bid-card:hover, .top-card:hover {
+    transform: translateY(-5px); /* Lift card slightly on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+/* Logo/Image Styling */
+.idea-explore {
+    padding: 40px;
+    background-color: #f4f4f4;
+  }
+  
+  .idea-explore h2 {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 30px;
+    color: #333;
+  }
+  
+  .idea-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .idea-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .idea-logo {
+    margin-bottom: 15px;
+  }
+  
+  .idea-logo img {
+    width: 10%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .idea-card h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .idea-card p {
+    font-size: 16px;
+    margin: 5px 0;
+    color: #666;
+  }
+  
+  .idea-card p:last-child {
+    font-weight: bold;
+    color: #000;
+  }
+  
+  .idea-card p.no-photo {
+    font-style: italic;
+    color: #999;
+  }
+  
 
 @media (max-width: 768px) {
     .job-card, .idea-card, .bid-card, .top-card {

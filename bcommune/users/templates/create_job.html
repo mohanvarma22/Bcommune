@@ -1,16 +1,20 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Job</title>
-    <link rel="stylesheet" href="/Static/css/jobcreate.css">
+    <link rel="stylesheet" href="{% static 'css/jobcreate.css'%}">
 </head>
 <body>
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="/images/Bcommune_logo.png" alt="Bcommune Logo" width="200" height="40">
+                <img src="{% static 'images/Bcommune_logo.png' %}" alt="Bcommune Logo">
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="   Search for jobs, skills, etc." />
             </div>
             <nav>
                 <a href="/jobs">View Jobs</a>
