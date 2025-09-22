@@ -1,0 +1,44 @@
+services:
+  # Development service
+  bcommune-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env.local
+    command: npm run dev
+    profiles:
+      - dev
+
+  # Production service
+  bcommune-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+    profiles:
+      - prod
+
+  # Production with environment variables
+  bcommune-prod-env:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env.production
+    profiles:
+      - prod-env
