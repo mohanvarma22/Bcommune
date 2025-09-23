@@ -36,6 +36,8 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
+          build-args: |
+            GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
           tags: ${{ steps.meta.outputs.tags }}
 
 
